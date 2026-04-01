@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>April 2026 Planner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f3f4f6;padding:1rem;color:#111}
+:root{
+  --bg-primary:#fff;--bg-secondary:#f3f4f6;--bg-info:#e6f1fb;--bg-success:#e1f5ee;
+  --border-tertiary:rgba(0,0,0,0.12);--border-secondary:rgba(0,0,0,0.25);--border-info:#378ADD;--border-success:#1D9E75;
+  --text-primary:#111;--text-secondary:#555;--text-tertiary:#999;--text-info:#0C447C;--text-success:#085041;
+  --radius-md:8px;--radius-lg:12px
+}
+.pill{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;line-height:1.4;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill.work{background:#FFF3D6;color:#854F0B;border:0.5px solid #EF9F27}
+.pill.exercise{background:#EAF3DE;color:#27500A;border:0.5px solid #639922;cursor:pointer}
+.pill.exercise:hover{background:#C0DD97}
+.pill.handytrack{background:#E1F5EE;color:#085041;border:0.5px solid #1D9E75;cursor:pointer}
+.pill.handytrack:hover{background:#9FE1CB}
+.pill.udemy{background:#E6F1FB;color:#0C447C;border:0.5px solid #378ADD;cursor:pointer}
+.pill.udemy:hover{background:#B5D4F4}
+.pill.home{background:#EEEDFE;color:#3C3489;border:0.5px solid #7F77DD}
+.hdr{font-size:11px;font-weight:500;color:var(--text-secondary);text-align:center;padding:4px 0 8px}
+.legend-dot{width:10px;height:10px;border-radius:2px;display:inline-block;flex-shrink:0}
+.view-btn{background:transparent;border:0.5px solid rgba(0,0,0,0.25);border-radius:8px;padding:5px 14px;font-size:13px;cursor:pointer;color:#111}
+.view-btn.active{background:#f3f4f6;font-weight:500}
+.nav-btn{background:transparent;border:0.5px solid rgba(0,0,0,0.12);border-radius:8px;width:28px;height:28px;cursor:pointer;color:#111;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
+.day-cell{background:#fff;border:0.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:6px;min-height:120px}
+.day-cell.empty-cell{background:transparent;border-color:transparent}
+.day-cell.today-cell{border:1.5px solid #378ADD}
+.day-num{font-size:12px;font-weight:500;color:#555;margin-bottom:4px}
+.day-num.today-num{color:#0C447C}
+.wk-cell{background:#fff;border:0.5px solid rgba(0,0,0,0.12);border-radius:8px;padding:8px;min-width:120px;flex:1}
+.wk-cell.today-cell{border:1.5px solid #378ADD}
+.wk-cell.empty-cell{background:#f3f4f6;opacity:0.4;min-width:60px;flex:0.5}
+.wk-day-hdr{font-size:11px;font-weight:500;color:#555;margin-bottom:6px;padding-bottom:5px;border-bottom:0.5px solid rgba(0,0,0,0.12)}
+.wk-day-hdr span{display:block;font-size:16px;font-weight:500;color:#111;margin-top:1px}
+.wk-day-hdr span.today-num{color:#0C447C}
+.popup{position:absolute;z-index:50;background:#fff;border:0.5px solid rgba(0,0,0,0.25);border-radius:10px;padding:11px;width:230px;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+.popup input,.popup textarea{width:100%;margin-bottom:8px;font-size:12px;padding:6px 8px;border:0.5px solid rgba(0,0,0,0.25);border-radius:6px;font-family:inherit}
+.popup textarea{resize:vertical;min-height:60px}
+.popup .plbl{font-size:11px;color:#555;margin-bottom:5px;display:block}
+.popup .pact{display:flex;gap:6px}
+.popup .pact button{flex:1;font-size:11px;padding:5px 0;cursor:pointer;border-radius:6px;border:0.5px solid rgba(0,0,0,0.2);background:transparent;color:#111}
+.popup .pact button.psave{background:#e1f5ee;color:#085041;border-color:#1D9E75}
+.popup .pclear{font-size:10px;color:#999;cursor:pointer;text-align:right;margin-bottom:6px;display:block}
+.popup .pclear:hover{color:#c00}
+</style>
+</head>
+<body>
+<div id="root" style="max-width:960px;margin:0 auto;padding:1rem 0">
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+  <div>
+    <div style="font-size:20px;font-weight:500">April 2026</div>
+    <div style="font-size:12px;color:#555;margin-top:2px">Click <span style="color:#085041">HandyTrack</span>, <span style="color:#0C447C">Udemy</span> or <span style="color:#27500A">exercise</span> pills to add details</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 14px">
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#555"><span class="legend-dot" style="background:#FFF3D6;border:0.5px solid #EF9F27"></span>Work</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#555"><span class="legend-dot" style="background:#EAF3DE;border:0.5px solid #639922"></span>Exercise ✎</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#555"><span class="legend-dot" style="background:#E1F5EE;border:0.5px solid #1D9E75"></span>HandyTrack ✎</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#555"><span class="legend-dot" style="background:#E6F1FB;border:0.5px solid #378ADD"></span>Udemy ✎</div>
+    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#555"><span class="legend-dot" style="background:#EEEDFE;border:0.5px solid #7F77DD"></span>Home</div>
+  </div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+  <div style="display:flex;gap:6px">
+    <button class="view-btn active" id="btn-month" onclick="setView('month')">Month</button>
+    <button class="view-btn" id="btn-week" onclick="setView('week')">Week</button>
+  </div>
+  <div id="week-nav" style="display:none;align-items:center;gap:8px">
+    <button class="nav-btn" onclick="changeWeek(-1)">←</button>
+    <span id="week-label" style="font-size:13px;color:#555;min-width:90px;text-align:center"></span>
+    <button class="nav-btn" onclick="changeWeek(1)">→</button>
+  </div>
+</div>
+
+<div id="day-hdrs" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-bottom:4px">
+  <div class="hdr">Sun</div><div class="hdr">Mon</div><div class="hdr">Tue</div><div class="hdr">Wed</div><div class="hdr">Thu</div><div class="hdr">Fri</div><div class="hdr">Sat</div>
+</div>
+<div id="cal-area"></div>
+
+<div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:16px">
+  <div style="background:#f3f4f6;border-radius:8px;padding:10px 12px"><div style="font-size:11px;color:#555;margin-bottom:2px">Work/study</div><div style="font-size:20px;font-weight:500">12 <span style="font-size:11px;font-weight:400;color:#555">days</span></div></div>
+  <div style="background:#f3f4f6;border-radius:8px;padding:10px 12px"><div style="font-size:11px;color:#555;margin-bottom:2px">Exercise</div><div style="font-size:20px;font-weight:500">14 <span style="font-size:11px;font-weight:400;color:#555">sessions</span></div></div>
+  <div style="background:#f3f4f6;border-radius:8px;padding:10px 12px"><div style="font-size:11px;color:#555;margin-bottom:2px">HandyTrack</div><div style="font-size:20px;font-weight:500">~57 <span style="font-size:11px;font-weight:400;color:#555">hrs</span></div></div>
+  <div style="background:#f3f4f6;border-radius:8px;padding:10px 12px"><div style="font-size:11px;color:#555;margin-bottom:2px">Udemy</div><div style="font-size:20px;font-weight:500">~26 <span style="font-size:11px;font-weight:400;color:#555">hrs</span></div></div>
+  <div style="background:#f3f4f6;border-radius:8px;padding:10px 12px"><div style="font-size:11px;color:#555;margin-bottom:2px">Home tasks</div><div style="font-size:20px;font-weight:500">8 <span style="font-size:11px;font-weight:400;color:#555">slots</span></div></div>
+</div>
+</div>
+
+<script>
+const DAY_NAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DAYS=[
+  {d:1,today:true,pills:[{t:'handytrack',l:'HandyTrack 09–12',detail:''},{t:'home',l:'Laundry (on while working)'},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:2,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:3,pills:[{t:'exercise',l:'Type A: Bike 30 min',detail:''},{t:'handytrack',l:'HandyTrack 14–17',detail:''}]},
+  {d:4,pills:[{t:'home',l:'House clean 09–11'},{t:'home',l:'Laundry (on while cleaning)'},{t:'handytrack',l:'HandyTrack 11–14',detail:''},{t:'udemy',l:'Udemy 15–17',detail:''}]},
+  {d:5,pills:[{t:'handytrack',l:'HandyTrack 09–13',detail:''},{t:'exercise',l:'Freedom Field 13:30–14:30',detail:''},{t:'exercise',l:'Type B: Resistance',detail:''},{t:'udemy',l:'Udemy 15–17',detail:''}]},
+  {d:6,pills:[{t:'home',l:'Laundry (on while working)'},{t:'handytrack',l:'HandyTrack 09–13',detail:''},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:7,pills:[{t:'exercise',l:'Type A: Bike 35 min',detail:''},{t:'handytrack',l:'HandyTrack 10–13',detail:''},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:8,pills:[{t:'exercise',l:'Type C: Rest',detail:''},{t:'handytrack',l:'HandyTrack 09–12',detail:''},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:9,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:10,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:11,pills:[{t:'home',l:'House clean 09–11'},{t:'home',l:'Laundry (on while cleaning)'},{t:'exercise',l:'Type B: Resistance',detail:''},{t:'handytrack',l:'HandyTrack 13–16',detail:''}]},
+  {d:12,pills:[{t:'handytrack',l:'HandyTrack 09–13',detail:''},{t:'udemy',l:'Udemy 15–17',detail:''}]},
+  {d:13,pills:[{t:'work',l:'Study day 08:30–16:30'},{t:'exercise',l:'Type A: Bike 35 min',detail:''},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:14,pills:[{t:'exercise',l:'Type C: Walk/Recovery',detail:''},{t:'home',l:'Laundry (on while working)'},{t:'handytrack',l:'HandyTrack 10–13',detail:''},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:15,pills:[{t:'exercise',l:'Type B: +weight',detail:''},{t:'handytrack',l:'HandyTrack 09–12',detail:''},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:16,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:17,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:18,pills:[{t:'home',l:'House clean 09–11'},{t:'home',l:'Laundry (on while cleaning)'},{t:'exercise',l:'Type A: Bike 40 min',detail:''},{t:'handytrack',l:'HandyTrack 13–16',detail:''}]},
+  {d:19,pills:[{t:'handytrack',l:'HandyTrack 09–13',detail:''},{t:'exercise',l:'Freedom Field 13:30–14:30',detail:''},{t:'exercise',l:'Type C: 45 min walk',detail:''},{t:'udemy',l:'Udemy 15:30–17',detail:''}]},
+  {d:20,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:21,pills:[{t:'exercise',l:'Type B: Squat & row',detail:''},{t:'home',l:'Laundry (on while working)'},{t:'udemy',l:'Udemy 10–12',detail:''},{t:'handytrack',l:'HandyTrack 13–16',detail:''}]},
+  {d:22,pills:[{t:'exercise',l:'Type A: Row 30 min',detail:''},{t:'handytrack',l:'HandyTrack 09–12',detail:''},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:23,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:24,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:25,pills:[{t:'home',l:'House clean 09–11'},{t:'home',l:'Laundry (on while cleaning)'},{t:'handytrack',l:'HandyTrack 11–14',detail:''},{t:'udemy',l:'Udemy 15–17',detail:''}]},
+  {d:26,pills:[{t:'handytrack',l:'HandyTrack 09–13',detail:''},{t:'exercise',l:'Freedom Field 13:30–14:30',detail:''},{t:'exercise',l:'Type B: Cable face pulls',detail:''},{t:'udemy',l:'Udemy 15:30–17',detail:''}]},
+  {d:27,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+  {d:28,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'home',l:'Laundry (on before work)'},{t:'udemy',l:'Udemy 19:30–21',detail:''}]},
+  {d:29,pills:[{t:'exercise',l:'Type A: Bike/row 40 min',detail:''},{t:'handytrack',l:'HandyTrack 09–12',detail:''},{t:'udemy',l:'Udemy 14–16',detail:''}]},
+  {d:30,pills:[{t:'work',l:'Work 08:30–19:00'},{t:'handytrack',l:'HandyTrack 19:30–21',detail:''}]},
+];
+const WEEKS=[
+  {label:'Apr 1–4',cols:[null,null,null,0,1,2,3]},
+  {label:'Apr 5–11',cols:[4,5,6,7,8,9,10]},
+  {label:'Apr 12–18',cols:[11,12,13,14,15,16,17]},
+  {label:'Apr 19–25',cols:[18,19,20,21,22,23,24]},
+  {label:'Apr 26–30',cols:[25,26,27,28,29,null,null]},
+];
+const PLACEHOLDERS={handytrack:'e.g. Job card UI, payment flow, WCAG audit...',udemy:'e.g. React Native – The Practical Guide',exercise:'e.g. 3×10 squats @ 60kg, 5k in 27:30'};
+const LABELS={handytrack:'HandyTrack tasks for this session',udemy:'Udemy course name',exercise:'Exercise detail'};
+const EDITABLE=['handytrack','udemy','exercise'];
+let currentView='month',currentWeek=0,activePopup=null;
+function closePopup(){if(activePopup){activePopup.remove();activePopup=null;}}
+function openPopup(pillEl,dayIdx,pillIdx){
+  closePopup();
+  const pill=DAYS[dayIdx].pills[pillIdx];
+  const popup=document.createElement('div');popup.className='popup';
+  const lbl=document.createElement('span');lbl.className='plbl';lbl.textContent=LABELS[pill.t]||'Detail';popup.appendChild(lbl);
+  let inp;
+  if(pill.t==='handytrack'){inp=document.createElement('textarea');inp.rows=3;}else{inp=document.createElement('input');}
+  inp.value=pill.detail||'';inp.placeholder=PLACEHOLDERS[pill.t]||'';popup.appendChild(inp);
+  if(pill.detail){const clr=document.createElement('span');clr.className='pclear';clr.textContent='Clear';clr.onclick=e=>{e.stopPropagation();pill.detail='';closePopup();updatePillEl(pillEl,pill);};popup.appendChild(clr);}
+  const acts=document.createElement('div');acts.className='pact';
+  const cancel=document.createElement('button');cancel.textContent='Cancel';cancel.onclick=e=>{e.stopPropagation();closePopup();};
+  const save=document.createElement('button');save.className='psave';save.textContent='Save';
+  save.onclick=e=>{e.stopPropagation();pill.detail=inp.value.trim();closePopup();updatePillEl(pillEl,pill);};
+  inp.onkeydown=e=>{if(pill.t!=='handytrack'&&e.key==='Enter')save.click();if(e.key==='Escape')cancel.click();e.stopPropagation();};
+  acts.append(cancel,save);popup.appendChild(acts);
+  const cell=pillEl.closest('[data-cell]');
+  const cellRect=cell.getBoundingClientRect();const pillRect=pillEl.getBoundingClientRect();
+  const rootRect=document.getElementById('root').getBoundingClientRect();
+  let top=pillRect.bottom-cellRect.top+4;let left=pillRect.left-cellRect.left;
+  const maxLeft=rootRect.width-238;if(left>maxLeft)left=maxLeft;if(left<0)left=0;
+  popup.style.top=top+'px';popup.style.left=left+'px';
+  cell.style.position='relative';cell.appendChild(popup);activePopup=popup;
+  setTimeout(()=>inp.focus(),0);
+}
+function updatePillEl(el,pill){
+  if(pill.detail){
+    const firstLine=pill.detail.split('\n')[0];
+    const extra=pill.detail.split('\n').filter(l=>l.trim()).length-1;
+    el.textContent=firstLine+(extra>0?' +'+extra+' more':'');
+    el.title=pill.l+'\n'+pill.detail;
+  }else{el.textContent=pill.l+' ✎';el.title='Click to add detail';}
+}
+function makePillEl(pill,dayIdx,pillIdx){
+  const el=document.createElement('span');el.className='pill '+pill.t;
+  if(EDITABLE.includes(pill.t)){updatePillEl(el,pill);el.addEventListener('click',e=>{e.stopPropagation();openPopup(el,dayIdx,pillIdx);});}
+  else{el.textContent=pill.l;}
+  return el;
+}
+function renderMonth(){
+  const area=document.getElementById('cal-area');area.innerHTML='';
+  const grid=document.createElement('div');grid.style.cssText='display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px';
+  for(let i=0;i<3;i++){const e=document.createElement('div');e.className='day-cell empty-cell';grid.appendChild(e);}
+  DAYS.forEach((_,di)=>{
+    const day=DAYS[di];const cell=document.createElement('div');
+    cell.className='day-cell'+(day.today?' today-cell':'');cell.setAttribute('data-cell','1');
+    const num=document.createElement('div');num.className='day-num'+(day.today?' today-num':'');num.textContent=day.d;
+    cell.appendChild(num);day.pills.forEach((p,pi)=>cell.appendChild(makePillEl(p,di,pi)));grid.appendChild(cell);
+  });
+  const trail=document.createElement('div');trail.className='day-cell empty-cell';grid.appendChild(trail);
+  area.appendChild(grid);document.getElementById('day-hdrs').style.display='grid';
+}
+function renderWeek(){
+  const area=document.getElementById('cal-area');area.innerHTML='';
+  document.getElementById('day-hdrs').style.display='none';
+  document.getElementById('week-label').textContent=WEEKS[currentWeek].label;
+  const wrap=document.createElement('div');wrap.style.cssText='display:flex;gap:4px;overflow-x:auto;padding-bottom:4px';
+  WEEKS[currentWeek].cols.forEach((dayIdx,colI)=>{
+    if(dayIdx===null){const e=document.createElement('div');e.className='wk-cell empty-cell';const h=document.createElement('div');h.className='wk-day-hdr';h.textContent=DAY_NAMES[colI];e.appendChild(h);wrap.appendChild(e);return;}
+    const day=DAYS[dayIdx];const cell=document.createElement('div');
+    cell.className='wk-cell'+(day.today?' today-cell':'');cell.setAttribute('data-cell','1');
+    const hdr=document.createElement('div');hdr.className='wk-day-hdr';
+    const dn=document.createElement('span');dn.style.cssText='font-size:11px;font-weight:500;color:#555;display:block';dn.textContent=DAY_NAMES[colI];
+    const dt=document.createElement('span');if(day.today)dt.className='today-num';dt.textContent=day.d;
+    hdr.appendChild(dn);hdr.appendChild(dt);cell.appendChild(hdr);
+    day.pills.forEach((p,pi)=>cell.appendChild(makePillEl(p,dayIdx,pi)));
+    wrap.appendChild(cell);
+  });
+  area.appendChild(wrap);
+}
+function setView(v){
+  currentView=v;
+  document.getElementById('btn-month').classList.toggle('active',v==='month');
+  document.getElementById('btn-week').classList.toggle('active',v==='week');
+  document.getElementById('week-nav').style.display=v==='week'?'flex':'none';
+  closePopup();v==='month'?renderMonth():renderWeek();
+}
+function changeWeek(dir){const n=currentWeek+dir;if(n<0||n>=WEEKS.length)return;currentWeek=n;closePopup();renderWeek();}
+document.addEventListener('click',e=>{if(activePopup&&!activePopup.contains(e.target))closePopup();});
+renderMonth();
+</script>
+</body>
+</html>
